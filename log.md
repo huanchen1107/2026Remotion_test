@@ -38,3 +38,19 @@
 - 當您需要在此專案中開發動畫時，建議使用 Claude/Gemini/Codex 直接對 `remotion/` 資料夾進行創作。
 - 專案根目錄已建立最簡配置，具備最強大、安全的 AI 開發日誌與 key 過濾功能。
 
+
+## 2026.05.19 (工作階段自動摘要)
+> **本工作階段由 ./ending.sh 自動觸發生成備份**
+
+### 🛠️ 執行動作項目
+- \
+
+### 📂 變更檔案清單
+- `M CLAUDE.md`
+- ` M ending.sh`
+- `?? utils/auto_summary.py`
+
+### 📦 近期 Git 提交紀錄
+- `1b38695 Create SimpleLogo.tsx starter composition and register it in Root.tsx`
+- `7236432 Update README.md and log.md with detailed Remotion instructions and Agent Skills directions`
+- `f9d0cac Scaffold Remotion project inside remotion/ folder and provision Remotion agent skills`
