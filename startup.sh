@@ -17,6 +17,94 @@ check_cmd() {
     fi
 }
 
+clean_workspace() {
+    local PROJECT_NAME="$1"
+    local TODAY=$(date +"%Y.%m.%d")
+    local DEV_LOG="log.md"
+    
+    echo "🧹 Starting project cleanup for: $PROJECT_NAME"
+    
+    # 1. Handle Development Logs
+    echo "📝 Initializing development log: $DEV_LOG"
+    find . -maxdepth 1 -name "*開發日誌.md" -delete
+    
+    cat <<EOF > "$DEV_LOG"
+# Development Log
+
+## $TODAY
+> **備忘錄**
+> 本專案使用官方 **Claude Code** 搭配 \`.env\` 中設定的 \`ANTHROPIC_API_KEY\` 運作。
+> 直接執行 \`./cc.sh\` 或 \`./startup.sh\` 即可。
+
+### 今日重點紀錄
+1. **專案初始化**：完成環境重置與自動建庫。
+2. **新專案啟動**：準備開始 $PROJECT_NAME 的開發工作。
+
+### 技術結論
+- (待填寫)
+EOF
+
+    # 2. Reset Core Markdown Files
+    echo "📄 Resetting core markdown files..."
+    
+    cat <<EOF > README.md
+# $PROJECT_NAME
+
+> **MEMO ($TODAY)**: This project runs via the official **Claude Code** client with API keys configured in \`.env\`.
+> Simply run \`./cc.sh\` to start.
+
+## 🚀 Quick Start
+
+\`\`\`bash
+./startup.sh   # Initialize project + launch Claude Code
+./ending.sh    # Commit, push, and finalize session
+\`\`\`
+
+## 🤖 How it Works
+
+\`startup.sh\` → reads \`project_initial.md\` → launches \`cc.sh\` (direct launcher).
+
+## 📁 Project Structure
+
+\`\`\`
+.
+├── cc.sh              # Unified launcher (direct official API)
+├── startup.sh         # Session start: reads project goals + launches cc.sh
+├── ending.sh          # Session end: update logs + commit + push
+├── .env               # API keys (gitignored)
+├── $DEV_LOG          # Development log
+└── user/dialog.md     # Auto-reconstructed conversation history
+\`\`\`
+
+## 🛠 Prerequisites
+
+- \`npx\` / Node.js — for Claude Code CLI
+- \`ANTHROPIC_API_KEY\` set in \`.env\`
+EOF
+
+    echo "# Project Initial" > project_initial.md
+    echo "(Describe your new project goals here)" >> project_initial.md
+    
+    echo "# Skill List" > skill_list.md
+    echo "- **gstack** (\`garrytan/gstack\`)" >> skill_list.md
+    echo "- **improve-codebase-architecture** (\`mattpocock/skills\`)" >> skill_list.md
+    echo "- **skill-creator** (\`anthropics/skills\`)" >> skill_list.md
+    echo "- **using-superpowers** (\`obra/superpowers\`)" >> skill_list.md
+    
+    # 3. Clean subdirectories
+    echo "📁 Cleaning user and Tutorial directories..."
+    mkdir -p user Tutorial
+    echo "# User Conversation Dialog History" > user/dialog.md
+    echo "# Tutorial 1: Getting Started" > Tutorial/Tutorial_1.md
+    
+    # 4. Finalizing
+    rm -f initial.sh cleanAll.sh
+    chmod +x startup.sh ending.sh cc.sh
+    
+    echo "✅ Cleanup complete. $PROJECT_NAME is ready for a fresh start!"
+}
+
+
 echo ""
 echo "📦 依賴工具："
 check_cmd "node" "brew install node"
@@ -133,11 +221,7 @@ if [ ! -f ".project_setup" ]; then
     git init -b main
     
     # 5. 執行 workspace 重置 (Run cleanup)
-    if [ -f "./cleanAll.sh" ]; then
-        echo "🧹 執行 cleanAll.sh 重置工作區文件..."
-        chmod +x cleanAll.sh
-        ./cleanAll.sh "$REPO_NAME"
-    fi
+    clean_workspace "$REPO_NAME"
     
     # 6. 檢查 GitHub 倉庫是否存在 (Check if GitHub repo exists)
     echo "🌐 檢查 GitHub 上是否存在該倉庫..."
