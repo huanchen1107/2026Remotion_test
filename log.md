@@ -48,10 +48,15 @@
    - 於 `README.md` 最上方新增了顯眼的 `Optimized for Remotion` 標記。
    - 於 `startup.sh` 啟動 Claude Code 之前加入顯眼的動畫提示橫幅（Remotion Active Banner），確保 AI 助手啟動時能第一時間感知 Remotion 技術棧與 skills。
    - 於 `ending.sh` 結尾成功推送後加入 `[Remotion Compositions] synced` 提示，保持端到端一致性。
+10. **完全移除 cc.sh 與極致精簡**：
+    - 徹底刪除冗餘的 `cc.sh` 腳本，將其啟動與終端優化邏輯直接合併進 `startup.sh`，改由 `startup.sh` 內直接執行 `npx -y @anthropic-ai/claude-code` 啟動會話。
+    - 建立 `.project_setup` 專案初始化鎖定檔以作為後續安全「溫啟動」依據，避免任何二次初始化動作意外覆蓋工作區已開發程式碼。
+    - 同步更新了 `README.md` 中的統一流程 Mermaid 圖表與專案結構目錄說明，以符合極簡化無 `cc.sh` 結構。
 
 ### 技術結論
 - 當您需要在此專案中開發動畫時，建議使用 Claude/Gemini/Codex 直接對 `remotion/` 資料夾進行創作。
 - 專案根目錄已建立最簡配置，具備最強大、安全的 AI 開發日誌與 key 過濾功能，已徹底清除 proxy 相關邏輯。
+- 未來僅需執行 `./startup.sh` 即可完成環境自檢並進入 Claude Code 進行開發，或執行 `./ending.sh` 結束會話並自動備份。
 
 
 ## 2026.05.19 (工作階段自動摘要)

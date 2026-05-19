@@ -23,7 +23,7 @@ graph TD
     D --> E[Write .project_setup Lockfile]
     B -- No --> F[Perform git pull]
     F --> G[Print log.md task lists]
-    E --> H[Launch cc.sh for Claude Code session]
+    E --> H[Launch Claude Code session]
     G --> H
     H --> I[Execute ./ending.sh to close session]
     I --> J[Run utils/reconstruct_dialog.py to save key-redacted user/dialog.md]
@@ -36,9 +36,8 @@ graph TD
 
 ```text
 .
-├── startup.sh         # Opener: auto-detects first-run (resets git, sanitizes directories), pulls, and boots cc.sh
+├── startup.sh         # Opener: auto-detects first-run (resets git, sanitizes directories), pulls, and boots Claude Code
 ├── ending.sh          # Closer: rebuilds dialogue logs, auto-commits under timestamps, and pushes to remote
-├── cc.sh              # Unified CLI Launcher: direct entry to Claude Code CLI
 ├── .env               # API Keys and target repository configurations (GIT IGNORED)
 ├── .env.bak           # Template for API Keys and repository settings configurations
 ├── log.md             # Chronological development log (read/updated in each session)

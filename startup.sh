@@ -34,7 +34,7 @@ clean_workspace() {
 ## $TODAY
 > **備忘錄**
 > 本專案使用官方 **Claude Code** 搭配 \`.env\` 中設定的 \`ANTHROPIC_API_KEY\` 運作。
-> 直接執行 \`./cc.sh\` 或 \`./startup.sh\` 即可。
+> 直接執行 \`./startup.sh\` 即可。
 
 ### 今日重點紀錄
 1. **專案初始化**：完成環境重置與自動建庫。
@@ -51,7 +51,7 @@ EOF
 # $PROJECT_NAME
 
 > **MEMO ($TODAY)**: This project runs via the official **Claude Code** client with API keys configured in \`.env\`.
-> Simply run \`./cc.sh\` to start.
+> Simply run \`./startup.sh\` to start.
 
 ## 🚀 Quick Start
 
@@ -62,14 +62,13 @@ EOF
 
 ## 🤖 How it Works
 
-\`startup.sh\` → reads \`project_initial.md\` → launches \`cc.sh\` (direct launcher).
+\`startup.sh\` → reads \`project_initial.md\` → launches Claude Code CLI.
 
 ## 📁 Project Structure
 
 \`\`\`
 .
-├── cc.sh              # Unified launcher (direct official API)
-├── startup.sh         # Session start: reads project goals + launches cc.sh
+├── startup.sh         # Session start: reads project goals + launches Claude Code CLI
 ├── ending.sh          # Session end: update logs + commit + push
 ├── .env               # API keys (gitignored)
 ├── $DEV_LOG          # Development log
@@ -100,7 +99,7 @@ EOF
     
     # 4. Finalizing
     rm -f initial.sh cleanAll.sh
-    chmod +x startup.sh ending.sh cc.sh
+    chmod +x startup.sh ending.sh
     
     echo "✅ Cleanup complete. $PROJECT_NAME is ready for a fresh start!"
 }
@@ -299,8 +298,6 @@ echo " 💡 AI assistants (Claude, Gemini, Codex) will automatically"
 echo "    render deterministic compositions based on the Gist."
 echo "✨=======================================================✨"
 echo ""
-if [ -f "cc.sh" ]; then
-    bash cc.sh
-else
-    echo "❌ 找不到 cc.sh，請確認檔案是否存在。"
-fi
+stty icrnl 2>/dev/null || true
+npx -y @anthropic-ai/claude-code
+
