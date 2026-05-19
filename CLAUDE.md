@@ -74,3 +74,23 @@ Guidelines for maintaining `log.md`:
   4. **Next Tasks**: Explicit tasks that should be tackled next.
 - Keep previous days' entries intact to preserve full history.
 
+## 6. Project Setup & Remote Connection
+
+**Automatic Bootstrap on First-Run:**
+
+When starting a project from this template:
+- `startup.sh` automatically checks for a `.project_setup` file to detect the first-run.
+- On the first run, it auto-detects a target GitHub repository:
+  1. Checks for `REPO_NAME` or `GITHUB_REPO` in `.env`.
+  2. Scans `project_initial.md` for a pre-assigned GitHub URL or `<owner>/<repo>` path.
+- If none is assigned, it prompts the user to enter a repo URL or name (defaulting to the current directory name).
+- It then automatically:
+  - Resets the template's Git repository (`rm -rf .git && git init -b main`).
+  - Runs `./cleanAll.sh <repo-name>` to reset development logs and templates for a fresh start.
+  - Checks if the remote repository exists on GitHub:
+    - If not, it attempts to create it publicly via `gh repo create` (if `gh` CLI is authenticated).
+    - If `gh` is not authenticated, it guides the user to create it manually before pushing.
+  - Connects the remote and performs the initial commit & push (`git push -u origin main`).
+  - Writes a `.project_setup` lockfile to mark setup as complete.
+
+

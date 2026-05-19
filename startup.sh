@@ -59,6 +59,124 @@ else
 fi
 
 # =========================================================
+# Step 1.5: 專案初始化 (Project Initialization)
+# =========================================================
+if [ ! -f ".project_setup" ]; then
+    echo ""
+    echo "=============================="
+    echo "⚙️  首次執行專案初始化 (First-time Initialization)"
+    echo "=============================="
+    
+    # 1. 偵測是否已預先指派 Repository (Check if repository is pre-assigned)
+    ASSIGNED_REPO=""
+    
+    # 從 .env 中檢查
+    if [ -f ".env" ]; then
+        # 暫時載入 .env 變數
+        eval "$(grep -E "^(REPO_NAME|GITHUB_REPO)=" .env 2>/dev/null)"
+        if [ -n "$REPO_NAME" ]; then
+            ASSIGNED_REPO="$REPO_NAME"
+        elif [ -n "$GITHUB_REPO" ]; then
+            ASSIGNED_REPO="$GITHUB_REPO"
+        fi
+    fi
+    
+    # 從 project_initial.md 中檢查
+    if [ -z "$ASSIGNED_REPO" ] && [ -f "project_initial.md" ]; then
+        # 搜尋包含 github.com 或 repo 關鍵字的行，提取可能的 URL 或使用者/專案名稱
+        ASSIGNED_REPO=$(grep -E -o '(https://github.com/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+|git@github.com:[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+|[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)' project_initial.md | grep -v 'github.com/huanchen1107/_ProjectTempate' | head -n 1)
+    fi
+    
+    # 2. 確定 Repository
+    REPO_TARGET=""
+    if [ -n "$ASSIGNED_REPO" ]; then
+        echo "🔍 偵測到預先設定的 Repository: $ASSIGNED_REPO"
+        REPO_TARGET="$ASSIGNED_REPO"
+    else
+        echo "❓ 未偵測到預先指派的 Repository。"
+        DEFAULT_NAME=$(basename "$PWD")
+        read -p "👉 請輸入要連接的 GitHub 專案名稱或 URL (預設使用目前資料夾名稱 '$DEFAULT_NAME'): " USER_INPUT
+        if [ -z "$USER_INPUT" ]; then
+            REPO_TARGET="$DEFAULT_NAME"
+        else
+            REPO_TARGET="$USER_INPUT"
+        fi
+    fi
+    
+    # 3. 解析專案名稱與使用者名稱 (Resolve repo name and username)
+    # 預設使用者
+    DEFAULT_USER="huanchen1107"
+    if [[ "$REPO_TARGET" =~ github\.com ]]; then
+        REPO_NAME=$(echo "$REPO_TARGET" | sed -E 's/.*github\.com[\/:][^\/]+\/([^\/.]+)(\.git)?/\1/')
+        REPO_USER=$(echo "$REPO_TARGET" | sed -E 's/.*github\.com[\/:][^\/:]*\/([^\/]+)\/.*/\1/')
+        REPO_URL="$REPO_TARGET"
+    elif [[ "$REPO_TARGET" =~ .*/.* ]]; then
+        REPO_USER=$(echo "$REPO_TARGET" | cut -d'/' -f1)
+        REPO_NAME=$(echo "$REPO_TARGET" | cut -d'/' -f2)
+        REPO_URL="https://github.com/${REPO_USER}/${REPO_NAME}.git"
+    else
+        REPO_NAME="$REPO_TARGET"
+        REPO_USER=$(git remote get-url origin 2>/dev/null | sed -E 's/.*github\.com[\/:]//; s/\/.*//')
+        if [ -z "$REPO_USER" ] || [[ "$REPO_USER" =~ "fatal" ]]; then
+            REPO_USER="$DEFAULT_USER"
+        fi
+        REPO_URL="https://github.com/${REPO_USER}/${REPO_NAME}.git"
+    fi
+    
+    echo "📦 目標專案：$REPO_NAME"
+    echo "👤 GitHub 使用者：$REPO_USER"
+    echo "🔗 遠端網址：$REPO_URL"
+    
+    # 4. 斷開範本關聯並重置 Git (Disconnect template and initialize)
+    echo "🔗 正在斷開範本與重置 Git 倉庫..."
+    rm -rf .git
+    git init -b main
+    
+    # 5. 執行 workspace 重置 (Run cleanup)
+    if [ -f "./cleanAll.sh" ]; then
+        echo "🧹 執行 cleanAll.sh 重置工作區文件..."
+        chmod +x cleanAll.sh
+        ./cleanAll.sh "$REPO_NAME"
+    fi
+    
+    # 6. 檢查 GitHub 倉庫是否存在 (Check if GitHub repo exists)
+    echo "🌐 檢查 GitHub 上是否存在該倉庫..."
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL")
+    
+    if [ "$HTTP_STATUS" -eq 404 ]; then
+        echo "❌ 該倉庫在 GitHub 上尚不存在。"
+        # 嘗試使用 gh CLI 建立
+        if command -v gh &>/dev/null && gh auth status &>/dev/null; then
+            echo "🛠 正在使用 GitHub CLI 自動在線上建立倉庫..."
+            gh repo create "$REPO_NAME" --public --source=. --remote=origin --push
+        else
+            echo "⚠️  GitHub CLI 未登入或未安裝，無法自動建立倉庫。"
+            echo "👉 請手動在 GitHub 上建立一個名為 '$REPO_NAME' 的空倉庫。"
+            read -p "建立完成後，請按 Enter 鍵繼續..."
+            git remote add origin "$REPO_URL"
+            git add .
+            git commit -m "Initial commit from template"
+            git push -u origin main
+        fi
+    else
+        echo "✅ 該倉庫已存在於 GitHub。"
+        git remote add origin "$REPO_URL"
+        git add .
+        git commit -m "Initial commit from template"
+        git push -u origin main
+    fi
+    
+    # 7. 寫入初始化標記 (Write initialization marker)
+    if [ $? -eq 0 ]; then
+        echo "true" > ".project_setup"
+        echo "🎉 專案初始化完成！"
+    else
+        echo "❌ 初始化推送失敗，請檢查權限或網路設定。"
+        exit 1
+    fi
+fi
+
+# =========================================================
 # Step 2: 拉取最新進度 (Git Pull)
 # =========================================================
 echo ""
