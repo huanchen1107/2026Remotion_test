@@ -74,8 +74,6 @@ echo "(Describe your new project goals here)" >> project_initial.md
 echo "# Skill List" > skill_list.md
 echo "- (Add installed skills here)" >> skill_list.md
 
-echo "# Claude Code Direct Readme" > freecc_readme.md
-
 # 3. Clean subdirectories
 echo "📁 Cleaning user and Tutorial directories..."
 mkdir -p user Tutorial
