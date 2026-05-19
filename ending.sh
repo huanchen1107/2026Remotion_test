@@ -53,4 +53,5 @@ git add .
 git commit -m "Auto-commit: 結束工作階段 $(date +%Y-%m-%d)" || echo "（無新變更）"
 git push origin main || echo "⚠️ 推送失敗：請確認 git remote 設定。"
 echo ""
+echo "🎬 [Remotion Compositions] All React-based video elements synced efficiently."
 echo "✅ 完成備份與同步！下次請執行 ./startup.sh 開始新工作階段。"

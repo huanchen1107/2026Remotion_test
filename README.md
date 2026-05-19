@@ -1,5 +1,7 @@
 # 🚀 2026 StartEndShell Project Template (v2.1 Consolidated)
 
+> 🎬 **Optimized for Remotion**: Official `remotion-best-practices` skills and deterministic composition rules are globally & locally active.
+
 This is a premium, highly consolidated shell session framework designed for managing development workflows seamlessly with **Claude Code** and advanced AI coding agents. It automates first-run project bootstrapping, session state synchronization, workspace sanitization, and secure dialogue reconstruction.
 
 ## 🚀 Quick Start

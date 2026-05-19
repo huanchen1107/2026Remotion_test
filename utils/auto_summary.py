@@ -27,15 +27,25 @@ def get_session_actions(conv_dir):
     if not os.path.exists(overview_path):
         return []
     
+    import json
     actions = []
     try:
         with open(overview_path, 'r', encoding='utf-8') as f:
             for line in f:
-                # Look for model tool calls
-                if "toolAction" in line or "toolSummary" in line:
-                    m = re.search(r'"toolAction":\s*"([^"]+)"', line)
-                    if m:
-                        actions.append(m.group(1))
+                line_str = line.strip()
+                if not line_str:
+                    continue
+                try:
+                    entry = json.loads(line_str)
+                    act = entry.get("toolAction") or entry.get("tool_action")
+                    if act:
+                        actions.append(act)
+                except Exception:
+                    # Fallback to regex if line is not valid JSON
+                    if "toolAction" in line_str or "toolSummary" in line_str:
+                        m = re.search(r'"toolAction":\s*"([^"]+)"', line_str)
+                        if m:
+                            actions.append(m.group(1))
     except Exception:
         pass
     

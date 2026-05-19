@@ -88,6 +88,7 @@ EOF
     echo "# Skill List" > skill_list.md
     echo "- **gstack** (\`garrytan/gstack\`)" >> skill_list.md
     echo "- **improve-codebase-architecture** (\`mattpocock/skills\`)" >> skill_list.md
+    echo "- **remotion-best-practices** (\`remotion-dev/skills\`)" >> skill_list.md
     echo "- **skill-creator** (\`anthropics/skills\`)" >> skill_list.md
     echo "- **using-superpowers** (\`obra/superpowers\`)" >> skill_list.md
     
@@ -291,6 +292,13 @@ echo ""
 echo "=============================="
 echo "Step 4: 啟動 Claude Code (Launch)"
 echo "=============================="
+echo ""
+echo "✨=======================================================✨"
+echo " 🎬 [Remotion Active] Global & Local Agent Skills Enabled!"
+echo " 💡 AI assistants (Claude, Gemini, Codex) will automatically"
+echo "    render deterministic compositions based on the Gist."
+echo "✨=======================================================✨"
+echo ""
 if [ -f "cc.sh" ]; then
     bash cc.sh
 else

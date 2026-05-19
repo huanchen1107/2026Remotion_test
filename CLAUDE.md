@@ -94,9 +94,9 @@ Guidelines for maintaining `log.md`:
 
 ---
 
-## 🎬 7. Remotion Coding & Component Rules
+## 🎬 7. Remotion Coding & Component Rules (Adapted from ThariqS Gist)
 
-This is a remotion-based video app that uses React to render videos. For official Remotion documentation, consult: https://www.remotion.dev/docs/
+This is a remotion-based video app that uses React to render videos (adapted from the [ThariqS/Remotion Claude.md Gist](https://gist.github.com/ThariqS/3d446e7c7aa9eb94f468194deb73028f#claudemd)). For official Remotion documentation, consult: https://www.remotion.dev/docs/
 
 ### 📁 Project Structure
 
