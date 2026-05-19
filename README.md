@@ -48,6 +48,36 @@ graph TD
 
 ---
 
+## 🎬 Remotion & AI Agent Skills
+
+This repository is fully configured for building React-based video animations using **Remotion**. It includes pre-loaded **Agent Skills** that allow AI helpers (like Claude Code, Codex, Gemini) to strictly follow official best practices.
+
+### 📁 Remotion Project Structure
+All Remotion code is neatly structured in the `remotion/` subdirectory:
+```bash
+remotion/
+├── src/
+│   ├── Root.tsx         # Remotion compositions entry point
+│   ├── index.ts         # Direct entry script
+│   └── HelloWorld/      # Default starter animation assets
+├── remotion.config.ts   # Remotion CLI configuration settings
+└── package.json         # Dependencies and scripts (React, Remotion, Prettier)
+```
+
+### ⚡ Quick Commands inside `remotion/`
+```bash
+cd remotion
+npm run dev              # Starts the local Remotion Preview Server
+npx remotion render      # Compiles the default HelloWorld animation into out/video.mp4
+```
+
+### 🧠 Agent Skills (`.agents/skills`)
+To make AI programming (via Claude, Gemini, Codex, or Cursor) fast and bug-free, the official `remotion-best-practices` skills have been provisioned in the project:
+* **Pre-loaded Skills**: Located at `.agents/skills/remotion-best-practices` and `remotion/.agents/skills/remotion-best-practices`.
+* **How it helps**: When you ask Claude, Gemini, or Codex to create or modify compositions in the `remotion/` directory, the agents automatically read these rules to ensure perfect React hook usage, precise frame-rate timings, audio-video synchronization, and optimal asset bundling.
+
+---
+
 ## 🛠️ Setup & Configuration
 
 1. **API Credentials & Project Goal Setting**:
